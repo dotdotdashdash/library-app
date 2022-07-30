@@ -13,9 +13,16 @@ mongoose.connect(mongoDbServer, {
 const Schema = mongoose.Schema;
 
 const BookSchema = new Schema({
-  title : String,
-  author: String,
-  image: String,
+  title : {
+    type: String,
+    index: true
+  },
+  author: {
+    type: String,
+    index: true
+  },
+  language: String,
+  imageUrl: String,
   about: String
 });
 

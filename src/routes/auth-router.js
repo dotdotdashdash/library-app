@@ -42,7 +42,7 @@ authRouter.post(`/signin`, (req, res)=> {
 });
 
 authRouter.post(`/signup`, (req, res)=> {
-  console.log(`POST: /signup - auth-router.js:16`, req.body);
+  // console.log(`POST: /signup - auth-router.js:16`, req.body);
 
   var newUser = {
     fullName : req.body.fullName.trim(),
@@ -52,11 +52,23 @@ authRouter.post(`/signup`, (req, res)=> {
 
   const NewUser = new UserData(newUser)
   NewUser.save()
-    .then((succ)=> {
-      console.log(succ);
+    .then((user)=> {
+      console.log(`SUCCESS: (User SignUp) --> ${user.userName}`);
+      res.json({
+        status: true,
+        userId: user._id,
+        endpoint: '/api/auth/signup',
+        result: `Successfully added ${user.userName}`
+      });
     })
-    .catch((err)=> {
-      console.log(err.code);
+    .catch((error)=> {
+      console.log('ERROR: (User SignUp) -->', error.code);
+      res.json({
+        status: false,
+        result: `${error.code==11000 ? 'Username already exists' : 'Add user failed'}`,
+        endpoint: '/api/auth/signup',
+        error: error.code
+      });
     });
 });
 

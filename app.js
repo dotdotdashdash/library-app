@@ -14,8 +14,6 @@ app.use(bodyparser.urlencoded({extended:true}));
 app.use(`/api/auth`, authRouter);
 app.use(`/api/books`, booksRouter);
 
-
-
 const PORT = process.env.PORT || 4444;
 app.listen(PORT, ()=> {
   console.log(`Hi, I'm listening at ${PORT}`);
