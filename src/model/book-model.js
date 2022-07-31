@@ -5,7 +5,7 @@ mongoose.connect(mongoDbServer, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then((succ)=>{
-  console.log(`MongoDB connection successfull! Connected to server at ${mongoDbServer}`);
+  console.log(`MongoDB connected at ${mongoDbServer} (book-model)`);
 }).catch((err)=> {
   console.log(`MongoDB connection error! Can't connect to ${mongoDbServer}`);
 });

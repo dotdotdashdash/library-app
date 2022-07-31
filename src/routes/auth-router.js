@@ -28,7 +28,7 @@ authRouter.post(`/signin`, (req, res)=> {
           result: `Invalid Password`        
         });
       } else {
-        let payload = { subject: userName + passWord}
+        let payload = { subject: userName + passWord }
         let token = jwt.sign(payload, `secretKey`);
         res.status(200).json({
           status: true,

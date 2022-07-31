@@ -4,6 +4,32 @@ const BookData = require(`../model/book-model`);
 
 const booksRouter = express.Router();
 
+verifyToken = (req, res, next)=> {
+
+  if(!req.headers.authorization) {
+    return res.status(401).send(`Unauthorized Request`);
+  }
+
+  console.log(req.headers.authorization.split(' '));
+
+  let token = req.headers.authorization.split(' ')[1]
+  if(token == null) {
+    return res.status(401).send(`Unauthorized Request`);
+  }
+
+  let payload = jwt.verify(token, `secretKey`, (err, succ)=> {
+    err ? console.log(err.message) : console.log(succ); ;
+  });
+
+  if(!payload) {
+    return res.status(401).send(`Unauthorized Request`);
+  }
+
+  req.userId = payload.subject;
+  next();
+  
+}
+
 booksRouter.get(`/`, (req, res)=> {
 
   BookData.find()
@@ -29,7 +55,25 @@ booksRouter.get(`/`, (req, res)=> {
     });
 });
 
-booksRouter.post(`/add`, (req,res)=> {
+booksRouter.delete(`/delete/:id`, (req, res)=> {
+
+  BookData.deleteOne({_id: req.params.id})
+    .then((succ)=> {
+      console.log(succ);
+      res.status(404).json({
+        success: true,
+        result: `Succesfully deleted`
+      });
+    }).catch((err)=> {
+      console.log(err.message);
+      res.status(404).json({
+        success: false,
+        result: `Delete failed`
+      });
+    });
+});
+
+booksRouter.post(`/add`, verifyToken, (req,res)=> {
   // console.log('POST: Add book: L:34', req.body);
 
   var book = {
