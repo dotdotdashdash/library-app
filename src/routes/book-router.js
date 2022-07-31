@@ -10,23 +10,24 @@ verifyToken = (req, res, next)=> {
     return res.status(401).send(`Unauthorized Request`);
   }
 
-  console.log(req.headers.authorization.split(' '));
-
   let token = req.headers.authorization.split(' ')[1]
   if(token == null) {
     return res.status(401).send(`Unauthorized Request`);
   }
 
-  let payload = jwt.verify(token, `secretKey`, (err, succ)=> {
-    err ? console.log(err.message) : console.log(succ); ;
+  jwt.verify(token, `secretKey`, (err, succ)=> {
+    if(err) {
+      // console.log('ERROR:--> JWT Verification', err.message);
+      return res.status(401).json({
+        success: false,
+        error: err.message
+      });
+    } else {
+      // console.log('SUCCESS:--> JWT Verification', succ); 
+      // req.userId = payload.subject;
+      next();
+    }
   });
-
-  if(!payload) {
-    return res.status(401).send(`Unauthorized Request`);
-  }
-
-  req.userId = payload.subject;
-  next();
   
 }
 
@@ -55,26 +56,30 @@ booksRouter.get(`/`, (req, res)=> {
     });
 });
 
-booksRouter.delete(`/delete/:id`, (req, res)=> {
+booksRouter.get(`/:id`, (req, res)=> {
+  // console.log(req.params.id);
 
-  BookData.deleteOne({_id: req.params.id})
-    .then((succ)=> {
-      console.log(succ);
-      res.status(404).json({
-        success: true,
-        result: `Succesfully deleted`
+  BookData.findOne({'_id': req.params.id})
+    .then((book)=> {
+      console.log(`GET: Get a book: ${book.title}`);
+      res.status(200).json({
+        endpoint : '/api/books/:id',
+        success : true,
+        response : book
       });
     }).catch((err)=> {
-      console.log(err.message);
+      console.log(`GET: Get a book ERROR ${err.message}`);
       res.status(404).json({
-        success: false,
-        result: `Delete failed`
+        endpoint : '/api/books/:id',
+        success : false,
+        response : 'Book with the id not found'
       });
     });
+
 });
 
 booksRouter.post(`/add`, verifyToken, (req,res)=> {
-  // console.log('POST: Add book: L:34', req.body);
+  console.log('POST: Add book: L:34', req.body);
 
   var book = {
     title : req.body.title,
@@ -89,15 +94,15 @@ booksRouter.post(`/add`, verifyToken, (req,res)=> {
     .then((book)=> {
       console.log(`SUCCESS: (New Book)--> ${book.title}`);
       res.status(200).json({
-        status: true,
+        success: true,
         bookId: book._id,
         endpoint: '/api/books/add',
         result: `Successfully added ${book.title}`
       });
     }).catch((error)=> {
       console.log('ERROR: (New Book)-->', error.code);
-      res.json({
-        status: false,
+      res.status(501).json({
+        success: false,
         result: `Add book failed`,
         endpoint: '/api/books/add',
         error: error.code
@@ -105,6 +110,53 @@ booksRouter.post(`/add`, verifyToken, (req,res)=> {
     });
 
 });
+
+booksRouter.put(`/update`, (req, res)=> {
+  // console.log(req.body);
+
+  BookData.findByIdAndUpdate({ "_id": req.body._id }, { $set: req.body }, { new: true}, 
+    (err, book)=> {
+      if(err) {
+        console.log('ERROR: (Updata Book)-->', err.message);
+        res.status(501).json({
+          success: false,
+          result: `Update operation failed`,
+          endpoint: '/api/books/update',
+          error: err.message
+        });
+      } else {
+        console.log(`SUCCESS: (Update Book)--> ${book.title}`);
+        res.status(200).json({
+          success: true,
+          bookId: book._id,
+          endpoint: '/api/books/update',
+          result: `Successfully updated ${book.title}`
+        });
+      }
+    }
+  );
+});
+
+booksRouter.delete(`/delete/:id`, verifyToken, (req, res)=> {
+
+  BookData.deleteOne({_id: req.params.id})
+    .then((succ)=> {
+      console.log(`DELETED: (${req.params.id}) ---->`, succ);
+      res.status(200).json({
+        success: true,
+        result: `Succesfully deleted`,
+        response: succ
+      });
+    }).catch((err)=> {
+      console.log(err.message);
+      res.status(501).json({
+        success: false,
+        result: `Delete failed`,
+        error: err.message
+      });
+    });
+});
+
 
 module.exports = booksRouter;
 
