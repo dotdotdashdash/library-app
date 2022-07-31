@@ -7,12 +7,18 @@ const booksRouter = express.Router();
 verifyToken = (req, res, next)=> {
 
   if(!req.headers.authorization) {
-    return res.status(401).send(`Unauthorized Request`);
+    return res.status(401).json({
+      success: false,
+      error: `Unauthorized request`
+    });
   }
 
   let token = req.headers.authorization.split(' ')[1]
   if(token == null) {
-    return res.status(401).send(`Unauthorized Request`);
+    return res.status(401).json({
+      success: false,
+      error: `Unauthorized request`
+    });
   }
 
   jwt.verify(token, `secretKey`, (err, succ)=> {
@@ -111,7 +117,7 @@ booksRouter.post(`/add`, verifyToken, (req,res)=> {
 
 });
 
-booksRouter.put(`/update`, (req, res)=> {
+booksRouter.put(`/update`,verifyToken, (req, res)=> {
   // console.log(req.body);
 
   BookData.findByIdAndUpdate({ "_id": req.body._id }, { $set: req.body }, { new: true}, 
