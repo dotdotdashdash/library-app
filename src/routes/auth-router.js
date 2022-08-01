@@ -62,7 +62,7 @@ authRouter.post(`/signup`, (req, res)=> {
       });
     })
     .catch((error)=> {
-      console.log('ERROR: (User SignUp) -->', error.code);
+      console.log('ERROR: (User SignUp) -->', `${error.code==11000 ? 'Duplicate username' : error.code}`);
       res.json({
         status: false,
         result: `${error.code==11000 ? 'Username already exists' : 'Add user failed'}`,
