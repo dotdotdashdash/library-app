@@ -5,9 +5,9 @@ mongoose.connect(mongoDbServer, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then((succ)=>{
-  console.log(`MongoDB connected at ${mongoDbServer} (user-model)`);
+  console.log(`MongoDB connected at ${mongoDbServer}`, );
 }).catch((err)=> {
-  console.log(`MongoDB connection error! Can't connect to ${mongoDbServer}`);
+  console.log(`MongoDB connection error! --->`, err.message);
 });
 
 const Schema = mongoose.Schema;
