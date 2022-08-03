@@ -1,0 +1,14 @@
+.hover-bold:hover {
+  color: rgb(253, 253, 222);
+  transform: scale(1.03, 1.03);
+  transition:  75ms ease-in-out;
+}
+
+#pustakamLogo {
+  /* Created with https://www.css-gradient.com */
+  background: #101412;
+  background: -webkit-radial-gradient(center, #101412, #706750);
+  background: -moz-radial-gradient(center, #101412, #706750);
+  background: radial-gradient(ellipse at center, #101412, #706750);
+  padding: 15px 10px;
+}

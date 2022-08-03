@@ -1,0 +1,8 @@
+body {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  background-image: url('../src/assets/bg-images/book-bg-library-ladder-2.jpg');
+  background-size: cover;
+  
+  position: relative;  /* For keeping the footer at bottom */
+  min-height: 100vh;
+}

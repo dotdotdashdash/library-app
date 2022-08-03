@@ -1,0 +1,75 @@
+
+<div class="container-fluid mt-5" style="padding-bottom: 10rem;">
+  <div class="row justify-content-center ">
+    <div class="col-sm-7 col-10 col-md-6 col-lg-5 col-xl-4 bg-black rounded-3 py-4 p-3 bg-opacity-75">
+      <div class="login-wrap p-0 my-2">
+        <h3 class="mb-4 text-center">{{heading}} Book</h3>
+
+        <form (ngSubmit) = 'enterBook()' class="signin-form" [formGroup]="addBookForm">
+          <div class="form-group">
+            <input 
+              name="bookTitle" 
+              [(ngModel)]="book.title" 
+              formControlName="bookTitleField"
+              id="bookTitle" 
+              type="text" 
+              class="form-control" 
+              placeholder="Book Title (Required)" >
+          </div>
+          <div class="form-group">
+            <input  
+              name="bookAuthor" 
+              [(ngModel)]="book.author" 
+              formControlName="bookAuthorField"
+              id="bookAuthor" 
+              type="text" 
+              class="form-control" 
+              placeholder="Author (Required)" >
+          </div>
+          <div class="form-group">
+            <input  
+              name="bookLanguage" 
+              [(ngModel)]="book.language" 
+              formControlName="bookLanguageField"
+              id="bookLanguage" 
+              type="text" 
+              class="form-control" 
+              placeholder="Language" >
+          </div>
+          <div class="form-group">
+            <input  
+              name="bookImageUrl" 
+              [(ngModel)]="book.imageUrl" 
+              formControlName="bookImageUrlField"
+              id="bookImageUrl" 
+              type="text" 
+              class="form-control" 
+              placeholder="Image URL"  >
+          </div>
+          <div class="form-group">
+            <textarea  
+              name="about" 
+              [(ngModel)]="book.about" 
+              formControlName="aboutBookField"
+              id="about" 
+              rows="3" 
+              type="textarea" 
+              class="form-control" 
+              placeholder="About" >
+            </textarea>
+          </div>
+          <br>
+          <div class="form-group">
+            <button 
+              type="submit" 
+              [disabled]="addBookForm.invalid"
+              class="form-control btn btn-primary submit px-3">
+              {{heading == 'Update' ? 'Update': 'Add'}}
+            </button>
+          </div>
+        </form>
+        
+      </div>
+    </div>
+  </div>
+</div>
