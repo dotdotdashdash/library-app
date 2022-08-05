@@ -85,7 +85,7 @@ booksRouter.get(`/:id`, (req, res)=> {
 });
 
 booksRouter.post(`/add`, verifyToken, (req,res)=> {
-  console.log('POST: Add book: L:34', req.body);
+  // console.log('POST: Add book: L:88', req.body);
 
   var book = {
     title : req.body.title,
@@ -98,7 +98,7 @@ booksRouter.post(`/add`, verifyToken, (req,res)=> {
   var newBook = new BookData(book);
   newBook.save()
     .then((book)=> {
-      console.log(`SUCCESS: (New Book)--> ${book.title}`);
+      console.log(`SUCCESS: (New book added)--> ${book.title}`);
       res.status(200).json({
         success: true,
         bookId: book._id,
